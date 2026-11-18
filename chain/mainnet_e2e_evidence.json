@@ -1,0 +1,44 @@
+{
+  "chainId": 196,
+  "contract": "0xb6b9c3ca3cb5c2ad02c06eaf1d860e52a96a0543",
+  "processor": "0x7335a50819d44402e3D5E00239bBB80A13E7308F",
+  "circuitId": 5,
+  "tenderId": 1,
+  "winner": "0x6bAf2687ffaCc1C5c3AF30bADe20510e1355AF54",
+  "winnerScore": 99,
+  "finalized": true,
+  "bids": {
+    "A": {
+      "address": "0x6bAf2687ffaCc1C5c3AF30bADe20510e1355AF54",
+      "eligible": true,
+      "total": 99,
+      "priceScore": 3
+    },
+    "B": {
+      "address": "0xd5bd5d7458375c9b376B6D577443a85fbd829291",
+      "eligible": true,
+      "total": 79,
+      "priceScore": 6
+    },
+    "C": {
+      "address": "0x97B41C8D30247b960E1D33110fCe24580f82663b",
+      "eligible": false,
+      "total": 0,
+      "priceScore": 10
+    }
+  },
+  "txs": {
+    "createTender": "0xa4ab5213fd8c0bca86349abdfb9ea144dfe60edf670a4c0cd92d0b318de807b9",
+    "commitA": "0xcf3276bde1037ccee9dd4690480829a183645e63001d0676218f50622bd4fb9c",
+    "commitB": "0x08f11e68935350eec7a90c1684947150d52ccb7c3916732a0b3e9e742e25ace7",
+    "commitC": "0x913929b7c71684debcd4d49450efd45eb944e274832afbe29f841ac45851ea7d",
+    "revealA": "0x574a18b0b516ba431918daa0ece33d3a103f128ebb97754e62a7a108636784b5",
+    "revealB": "0x6d077e8f2a0af14b09c95b886ed8ca5adf7012c0eb9d8cf8756b97efbef0c127",
+    "revealC": "0xc5edfed2710b2bdc167bf2f31034a958409751e754fe242baac7090c527742a4",
+    "evaluateA": "0x3e44e35f99c9a05561ef3cf198aff1f7a3abe1dc5401920e46383f1b411a368e",
+    "evaluateB": "0xaf1c83ad247b48f83b3a4449bdf882bab47cc0314961ee855de254439fea0406",
+    "evaluateC": "0x925aa31f0600c2afd3f39fce0654b4a86b453cfe78dadbe7669ed01d530ba0b5",
+    "finalize": "0x18538a6792d62436b5af525962ff1cd28b1b99230c3af37a424f0dcfcd0e466a"
+  },
+  "note": "Demo with our own test wallets (bidders A/B/C). Bidder C was cheapest with top scores but excluded because documents were not verified."
+}
