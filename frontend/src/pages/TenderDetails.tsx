@@ -4,6 +4,7 @@ import PageShell from "../components/PageShell";
 import { loadTender } from "../lib/load";
 import type { Bid } from "../lib/load";
 import { STATUS, STATUS_COLOR, fmt, short, explorerAddr } from "../lib/format";
+import { metaOf } from "../lib/meta";
 
 type Data = { tender: any; status: number; bids: Bid[] };
 
@@ -25,10 +26,11 @@ export default function TenderDetails() {
   if (!data) return <PageShell title={title}><div className="card text-ink-300">Loading from chain…</div></PageShell>;
 
   const t = data.tender;
+  const m = metaOf(t.metadataURI);
   const weights: [string, number][] = [["Technical quality", 40], ["Relevant experience", 30], ["Delivery capability", 20], ["Price competitiveness", 10]];
 
   return (
-    <PageShell title={title} subtitle={t.metadataURI}>
+    <PageShell title={title} subtitle={m.title}>
       <div className="flex items-center gap-3">
         <span className={"badge " + STATUS_COLOR[data.status]}>{STATUS[data.status]}</span>
         <Link to={"/verify/" + id} className="text-sm text-trust-400 underline">Verify this result</Link>
@@ -43,6 +45,19 @@ export default function TenderDetails() {
           <div><dt>Reveal by</dt><dd className="text-ink-100">{fmt(t.revealDeadline)}</dd></div>
         </dl>
       </div>
+
+      {(m.description || m.eligibility) && (
+        <div className="card mt-4">
+          <h3 className="font-semibold">About this tender</h3>
+          {m.description && <p className="mt-2 whitespace-pre-line text-sm text-ink-300">{m.description}</p>}
+          {m.eligibility && (
+            <>
+              <h4 className="mt-3 text-sm font-semibold">Minimum eligibility</h4>
+              <p className="mt-1 whitespace-pre-line text-sm text-ink-300">{m.eligibility}</p>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="card mt-4">
         <h3 className="font-semibold">Evaluation rules</h3>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PageShell from "../components/PageShell";
 import { publicClient, TENDER_TRUST, tenderTrustAbi } from "../lib/chain";
 import { STATUS, STATUS_COLOR, fmt, short } from "../lib/format";
+import { titleOf } from "../lib/meta";
 
 type Row = {
   id: number;
@@ -68,7 +69,7 @@ export default function Explore() {
               <span className="font-semibold">Tender #{r.id}</span>
               <span className={"badge " + STATUS_COLOR[r.status]}>{STATUS[r.status]}</span>
             </div>
-            <p className="mt-1 break-all text-sm text-ink-300">{r.uri}</p>
+            <p className="mt-1 break-all text-sm text-ink-300">{titleOf(r.uri)}</p>
             <dl className="mt-3 grid grid-cols-2 gap-2 text-xs text-ink-300">
               <div><dt>Budget</dt><dd className="text-ink-100">{r.budget.toString()} units</dd></div>
               <div><dt>Scoring</dt><dd className="text-ink-100">TapeOut circuit #{r.circuitId.toString()}</dd></div>

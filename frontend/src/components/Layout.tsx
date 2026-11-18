@@ -25,7 +25,7 @@ export default function Layout() {
               </NavLink>
             ))}
           </nav>
-          <span className="badge bg-ink-700 text-ink-300">X Layer Testnet</span>
+          <span className="badge bg-ink-700 text-ink-300">X Layer Mainnet</span>
         </div>
       </header>
 
