@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/rpc", "destination": "https://rpc.xlayer.tech" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
