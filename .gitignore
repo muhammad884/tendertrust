@@ -3,3 +3,5 @@ dist
 .env
 artifacts
 cache
+.env*
+*.key

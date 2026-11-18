@@ -1,0 +1,14 @@
+{
+  "chainId": 196,
+  "cpuIndex": 180,
+  "processor": "0x7335a50819d44402e3D5E00239bBB80A13E7308F",
+  "transistors": "0xe45D5a9B01582204f597eB0BE44d6e0a335CA6db",
+  "circuitId": 5,
+  "nIn": 17,
+  "nOut": 8,
+  "gateCount": 170,
+  "txMint": "0x16633e09607c7b63c0ff6ddceb94fa81bd1bd96d6ddcea70437ea366f971f7be",
+  "txTapeout": "0xfc9e0096116b699c455bdb8ee98bfc16c1984a39675d66050d4002ee081afbee",
+  "evalGas": "446651",
+  "onchainTests": "20/20"
+}
