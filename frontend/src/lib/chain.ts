@@ -13,7 +13,7 @@ export const xlayer = defineChain({
 export const TENDER_TRUST = deployment.contract as `0x${string}`;
 export const PROCESSOR = deployment.processor as `0x${string}`;
 export const CIRCUIT_ID = BigInt(deployment.circuitId);
-export const EXPLORER = "https://www.okx.com/web3/explorer/xlayer";
+export const EXPLORER = "https://www.oklink.com/x-layer";
 
 export const publicClient = createPublicClient({
   chain: xlayer,

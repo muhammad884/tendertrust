@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PageShell from "../components/PageShell";
+import TxDetails from "../components/TxDetails";
 import { loadTender, previewScore, formula } from "../lib/load";
 import type { Bid } from "../lib/load";
 import { TENDER_TRUST } from "../lib/chain";
 import { deployment, evidenceByTender } from "../lib/deployment";
-import { explorerAddr, explorerTx, short } from "../lib/format";
+import { explorerAddr, short } from "../lib/format";
 
 type Check = { bidder: string; recorded: number; circuit: number | null; formula: number };
 type Data = { tender: any; status: number; bids: Bid[] };
@@ -120,9 +121,9 @@ export default function Verify() {
           <p className="mt-1 text-xs text-ink-300">{ev?.note}</p>
           <ul className="mt-3 space-y-1 text-sm">
             {(Object.entries(ev?.txs ?? {}) as [string, string][]).map(([k, h]) => (
-              <li key={k}><a className={link} href={explorerTx(h)} target="_blank" rel="noreferrer">{k}: {short(h)}</a></li>
+              <li key={k}><TxDetails label={k} hash={h} /></li>
             ))}
-            <li><a className={link} href={explorerTx(deployment.tapeoutTx)} target="_blank" rel="noreferrer">circuit tapeout: {short(deployment.tapeoutTx)}</a></li>
+            <li><TxDetails label="circuit tapeout" hash={deployment.tapeoutTx} /></li>
           </ul>
         </div>
       )}

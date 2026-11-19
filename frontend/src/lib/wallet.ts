@@ -15,7 +15,7 @@ export async function switchToXLayer() {
           chainName: "X Layer",
           nativeCurrency: { name: "OKB", symbol: "OKB", decimals: 18 },
           rpcUrls: ["https://rpc.xlayer.tech"],
-          blockExplorerUrls: ["https://www.okx.com/web3/explorer/xlayer"],
+          blockExplorerUrls: ["https://www.oklink.com/x-layer"],
         }],
       });
     } else {
