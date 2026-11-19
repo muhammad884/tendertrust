@@ -1,0 +1,15 @@
+{
+  "tenderId": 4,
+  "contract": "0xb6b9c3ca3cb5c2ad02c06eaf1d860e52a96a0543",
+  "note": "Created and run through the website by separate wallets: one organizer and two bidders.",
+  "txs": {
+    "createTender": "0x9c3f2c35df422561618fc9147006ed89e8bd9435ba6f57c7ad5ac7d6ddcbb129",
+    "commit 0xfab7…94d7": "0x5e46e51db82d55325df450aafcd926961d570f9bd1456e13e0677331c309b5f9",
+    "commit 0x0e09…6f85": "0xb8ac338f366a7a2ef7d3e753bf240a2c313e80deff0d3c99a7765f1c4b9378fa",
+    "reveal 0xfab7…94d7": "0xc3e59de7a030c70cf89c1834921f6e2bc248404cea674968694388855feea0a5",
+    "reveal 0x0e09…6f85": "0xef61dcab02eccf0b893b344eec3d07022194c37a54c8766832f48b3055311d81",
+    "evaluate 0xfab7…94d7": "0x9b94750cbc45673d140625cf17773e06ffac59d6740da90213b151e1d77a986a",
+    "evaluate 0x0e09…6f85": "0x2a9ed6a9bb3344d6cd125e6e76e0b1416c69ccad985ed62c33e1252056db1c19",
+    "finalize": "0x8af0950002ee375a69374b81083081b299ad141c46182892a3f94c39d605495b"
+  }
+}

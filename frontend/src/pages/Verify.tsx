@@ -4,7 +4,7 @@ import PageShell from "../components/PageShell";
 import { loadTender, previewScore, formula } from "../lib/load";
 import type { Bid } from "../lib/load";
 import { TENDER_TRUST } from "../lib/chain";
-import { deployment, evidence } from "../lib/deployment";
+import { deployment, evidenceByTender } from "../lib/deployment";
 import { explorerAddr, explorerTx, short } from "../lib/format";
 
 type Check = { bidder: string; recorded: number; circuit: number | null; formula: number };
@@ -64,7 +64,8 @@ export default function Verify() {
 
   const t = data.tender;
   const link = "text-trust-400 underline break-all";
-  const showEvidence = Number(id) === evidence.tenderId;
+  const ev: { note: string; txs: Record<string, string> } | undefined = (evidenceByTender as any)[String(id)];
+  const showEvidence = !!ev;
 
   return (
     <PageShell title={title} subtitle="Everything below is read live from X Layer mainnet.">
@@ -116,9 +117,9 @@ export default function Verify() {
       {showEvidence && (
         <div className="card mt-4">
           <h3 className="font-semibold">Transactions for this demo tender</h3>
-          <p className="mt-1 text-xs text-ink-300">{evidence.note}</p>
+          <p className="mt-1 text-xs text-ink-300">{ev?.note}</p>
           <ul className="mt-3 space-y-1 text-sm">
-            {(Object.entries(evidence.txs) as [string, string][]).map(([k, h]) => (
+            {(Object.entries(ev?.txs ?? {}) as [string, string][]).map(([k, h]) => (
               <li key={k}><a className={link} href={explorerTx(h)} target="_blank" rel="noreferrer">{k}: {short(h)}</a></li>
             ))}
             <li><a className={link} href={explorerTx(deployment.tapeoutTx)} target="_blank" rel="noreferrer">circuit tapeout: {short(deployment.tapeoutTx)}</a></li>
