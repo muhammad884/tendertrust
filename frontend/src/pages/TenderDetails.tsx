@@ -35,6 +35,9 @@ export default function TenderDetails() {
         <span className={"badge " + STATUS_COLOR[data.status]}>{STATUS[data.status]}</span>
         <Link to={"/verify/" + id} className="text-sm text-trust-400 underline">Verify this result</Link>
       </div>
+      {data.status === 0 && <Link to={"/tender/" + id + "/bid"} className="btn-primary mt-4 w-full">Submit a bid</Link>}
+      {data.status === 1 && <Link to={"/tender/" + id + "/bid"} className="btn-primary mt-4 w-full">Reveal your bid</Link>}
+      {data.status === 2 && <Link to={"/tender/" + id + "/evaluate"} className="btn-ghost mt-4 w-full">Organizer: evaluate bids</Link>}
 
       <div className="card mt-4">
         <h3 className="font-semibold">Terms</h3>
