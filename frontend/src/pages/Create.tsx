@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { keccak256, toHex } from "viem";
+import { formatEther, keccak256, toHex } from "viem";
 import PageShell from "../components/PageShell";
 import { deployment } from "../lib/deployment";
 import { encodeMeta } from "../lib/meta";
-import { connect, writeTender } from "../lib/wallet";
+import { connect, explainWalletError, writeTender } from "../lib/wallet";
+import { publicClient } from "../lib/chain";
 import { explorerTx, short } from "../lib/format";
 
 const field = "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-3 text-ink-100";
@@ -13,6 +14,7 @@ const label = "mb-1 block text-sm text-ink-300";
 export default function Create() {
   const nav = useNavigate();
   const [account, setAccount] = useState("");
+  const [balance, setBalance] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [eligibility, setEligibility] = useState("");
@@ -26,7 +28,12 @@ export default function Create() {
 
   async function onConnect() {
     setErr("");
-    try { setAccount(await connect()); } catch (e: any) { setErr(e?.shortMessage ?? e?.message ?? "Could not connect"); }
+    try {
+      const a = await connect();
+      setAccount(a);
+      const b = await publicClient.getBalance({ address: a as `0x${string}` });
+      setBalance(formatEther(b));
+    } catch (e: any) { setErr(explainWalletError(e)); }
   }
 
   async function onPublish() {
@@ -53,7 +60,7 @@ export default function Create() {
       const commitDeadline = BigInt(now + c * 60);
       const revealDeadline = commitDeadline + BigInt(r * 60);
       setMsg("Confirm the transaction in your wallet…");
-      const { hash, receipt } = await writeTender(account, "createTender", [
+      const { hash, receipt } = await writeTender("createTender", [
         uri, rulesHash, BigInt(budget), commitDeadline, revealDeadline, deployment.processor, BigInt(deployment.circuitId),
       ]);
       setTx(hash);
@@ -62,7 +69,7 @@ export default function Create() {
       setTimeout(() => nav("/tender/" + id.toString()), 1800);
     } catch (e: any) {
       setMsg("");
-      setErr(e?.shortMessage ?? e?.message ?? "Transaction failed");
+      setErr(explainWalletError(e));
     } finally {
       setBusy(false);
     }
@@ -72,7 +79,7 @@ export default function Create() {
     <PageShell title="Create Tender" subtitle="Publish a tender and its scoring rules on X Layer mainnet.">
       <div className="card">
         {account ? (
-          <p className="text-sm">Connected: <span className="font-mono text-trust-400">{short(account)}</span></p>
+          <p className="text-sm">Connected: <span className="font-mono text-trust-400">{short(account)}</span>{balance && <span className="text-ink-300"> · {balance} OKB</span>}</p>
         ) : (
           <button className="btn-primary w-full" onClick={onConnect}>Connect wallet</button>
         )}

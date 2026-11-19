@@ -25,16 +25,33 @@ export async function switchToXLayer() {
 }
 
 export async function connect(): Promise<string> {
-  if (!eth()) throw new Error("No wallet found. Open this site inside the OKX Wallet or MetaMask browser.");
+  if (!eth()) throw new Error("No wallet found. Open this site in a browser with MetaMask or OKX Wallet.");
   const accounts: string[] = await eth().request({ method: "eth_requestAccounts" });
   await switchToXLayer();
   return accounts[0];
 }
 
-export async function writeTender(account: string, functionName: string, args: any[]): Promise<{ hash: string; receipt: any }> {
-  const wallet = createWalletClient({ account: account as `0x${string}`, chain: xlayer, transport: custom(eth()) });
+async function freshAccount(): Promise<string> {
+  const accounts: string[] = await eth().request({ method: "eth_requestAccounts" });
+  if (!accounts || accounts.length === 0) throw new Error("No account is connected to this site.");
+  const chainId: string = await eth().request({ method: "eth_chainId" });
+  if (String(chainId).toLowerCase() !== "0xc4") await switchToXLayer();
+  return accounts[0];
+}
+
+export function explainWalletError(e: any): string {
+  if (e?.code === 4100) {
+    return "The wallet did not authorize this request. In your wallet, select the account that holds OKB, make sure this site is connected to it (disconnect and reconnect if needed), then try again.";
+  }
+  if (e?.code === 4001) return "You rejected the request in your wallet.";
+  return e?.shortMessage ?? e?.message ?? "Request failed";
+}
+
+export async function writeTender(functionName: string, args: any[]): Promise<{ hash: string; receipt: any }> {
+  const account = (await freshAccount()) as `0x${string}`;
+  const wallet = createWalletClient({ account, chain: xlayer, transport: custom(eth()) });
   const sim: any = await publicClient.simulateContract({
-    account: account as `0x${string}`,
+    account,
     address: TENDER_TRUST,
     abi: tenderTrustAbi,
     functionName,
