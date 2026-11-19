@@ -1,7 +1,17 @@
 import { publicClient, TENDER_TRUST, tenderTrustAbi } from "./chain";
 
-const call = (functionName: string, args: any[] = []): Promise<any> =>
-  publicClient.readContract({ address: TENDER_TRUST, abi: tenderTrustAbi, functionName, args } as any);
+const call = async (functionName: string, args: any[] = []): Promise<any> => {
+  let last: any;
+  for (let i = 0; i < 4; i++) {
+    try {
+      return await publicClient.readContract({ address: TENDER_TRUST, abi: tenderTrustAbi, functionName, args } as any);
+    } catch (e) {
+      last = e;
+      await new Promise((r) => setTimeout(r, 900));
+    }
+  }
+  throw last;
+};
 
 export type Bid = {
   bidder: string;

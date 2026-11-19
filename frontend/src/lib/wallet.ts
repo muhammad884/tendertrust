@@ -44,7 +44,7 @@ export function explainWalletError(e: any): string {
     return "The wallet did not authorize this request. In your wallet, select the account that holds OKB, make sure this site is connected to it (disconnect and reconnect if needed), then try again.";
   }
   if (e?.code === 4001) return "You rejected the request in your wallet.";
-  return e?.shortMessage ?? e?.message ?? "Request failed";
+  return [e?.shortMessage ?? e?.message ?? "Request failed", e?.details ?? e?.cause?.shortMessage ?? ""].filter(Boolean).join(" | ");
 }
 
 export async function writeTender(functionName: string, args: any[]): Promise<{ hash: string; receipt: any }> {

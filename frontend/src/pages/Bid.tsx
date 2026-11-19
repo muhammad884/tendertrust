@@ -15,8 +15,18 @@ const keyOf = (id: string, who: string) => "tt:bid:" + TENDER_TRUST.toLowerCase(
 
 type Saved = { price: string; proposal: string; proposalHash: string; salt: string; commitTx?: string };
 
-const read = (functionName: string, args: any[]): Promise<any> =>
-  publicClient.readContract({ address: TENDER_TRUST, abi: tenderTrustAbi, functionName, args } as any);
+const read = async (functionName: string, args: any[]): Promise<any> => {
+  let last: any;
+  for (let i = 0; i < 4; i++) {
+    try {
+      return await publicClient.readContract({ address: TENDER_TRUST, abi: tenderTrustAbi, functionName, args } as any);
+    } catch (e) {
+      last = e;
+      await new Promise((r) => setTimeout(r, 900));
+    }
+  }
+  throw last;
+};
 
 function loadSaved(id: string, who: string): Saved | null {
   try {
@@ -68,7 +78,7 @@ export default function Bid() {
       const a = await connect();
       setAccount(a);
       setBalance(formatEther(await publicClient.getBalance({ address: a as `0x${string}` })));
-      await refresh(a);
+      await refresh(a).catch(() => { setSaved(loadSaved(id, a)); });
     } catch (e: any) {
       setErr(explainWalletError(e));
     }
@@ -83,8 +93,12 @@ export default function Bid() {
     if (proposal.trim().length < 10) return setErr("Describe your proposal (at least 10 characters).");
     setBusy(true);
     try {
-      const existing: any = await read("getBid", [BigInt(id), account]);
-      if (existing.commitment !== ZERO) throw new Error("You already have a commitment on-chain for this tender.");
+      try {
+        const existing: any = await read("getBid", [BigInt(id), account]);
+        if (existing.commitment !== ZERO) throw new Error("ALREADY");
+      } catch (e: any) {
+        if (e?.message === "ALREADY") throw new Error("You already have a commitment on-chain for this tender.");
+      }
       const salt = toHex(crypto.getRandomValues(new Uint8Array(32)));
       const proposalHash = keccak256(toHex(proposal.trim()));
       const commitment = await read("computeCommitment", [BigInt(id), account, BigInt(price), proposalHash, salt]);
