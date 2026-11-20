@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { Link, useParams } from "react-router-dom";
-import { formatEther, keccak256, toHex } from "viem";
+import { formatEther, toHex } from "viem";
 import PageShell from "../components/PageShell";
 import { publicClient, TENDER_TRUST, tenderTrustAbi } from "../lib/chain";
 import { loadTender } from "../lib/load";
 import { connect, explainWalletError, writeTender } from "../lib/wallet";
 import { STATUS, STATUS_COLOR, explorerTx, fmt, short } from "../lib/format";
 import { metaOf } from "../lib/meta";
+import { buildPackage, hashFile, hashPackage } from "../lib/pkg";
+import type { DocEntry } from "../lib/pkg";
 
 const field = "w-full rounded-xl border border-ink-600 bg-ink-900 px-4 py-3 text-ink-100";
 const lbl = "mb-1 block text-sm text-ink-300";
 const ZERO = "0x" + "00".repeat(32);
 const keyOf = (id: string, who: string) => "tt:bid:" + TENDER_TRUST.toLowerCase() + ":" + id + ":" + who.toLowerCase();
 
-type Saved = { price: string; proposal: string; proposalHash: string; salt: string; commitTx?: string };
+type Saved = { price: string; proposal: string; proposalHash: string; salt: string; commitTx?: string; pkg?: string };
 
 const read = async (functionName: string, args: any[]): Promise<any> => {
   let last: any;
@@ -55,6 +58,7 @@ export default function Bid() {
   const [saved, setSaved] = useState<Saved | null>(null);
   const [price, setPrice] = useState("");
   const [proposal, setProposal] = useState("");
+  const [docs, setDocs] = useState<DocEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [tx, setTx] = useState("");
@@ -84,6 +88,16 @@ export default function Bid() {
     }
   }
 
+  async function onFiles(e: ChangeEvent<HTMLInputElement>) {
+    setErr("");
+    const out: DocEntry[] = [];
+    for (const f of Array.from(e.target.files ?? []).slice(0, 10)) {
+      if (f.size > 25 * 1024 * 1024) { setErr(f.name + " is larger than 25 MB."); continue; }
+      out.push(await hashFile(f));
+    }
+    setDocs(out);
+  }
+
   async function onCommit() {
     setErr(""); setMsg(""); setTx("");
     const budget = BigInt(tender.budget);
@@ -100,9 +114,10 @@ export default function Bid() {
         if (e?.message === "ALREADY") throw new Error("You already have a commitment on-chain for this tender.");
       }
       const salt = toHex(crypto.getRandomValues(new Uint8Array(32)));
-      const proposalHash = keccak256(toHex(proposal.trim()));
+      const pkg = buildPackage(id, account, price, proposal.trim(), docs);
+      const proposalHash = hashPackage(pkg);
       const commitment = await read("computeCommitment", [BigInt(id), account, BigInt(price), proposalHash, salt]);
-      const rec: Saved = { price, proposal: proposal.trim(), proposalHash, salt };
+      const rec: Saved = { price, proposal: proposal.trim(), proposalHash, salt, pkg };
       store(id, account, rec); // saved before sending, so the salt is never lost
       setMsg("Confirm the transaction in your wallet…");
       const { hash } = await writeTender("commitBid", [BigInt(id), commitment]);
@@ -136,6 +151,17 @@ export default function Bid() {
     } finally {
       setBusy(false);
     }
+  }
+
+  function downloadPackage() {
+    if (!saved?.pkg) return;
+    const blob = new Blob([saved.pkg], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "tendertrust-bid-" + id + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
   async function copyBackup() {
@@ -184,6 +210,14 @@ export default function Bid() {
             <label className={lbl}>Proposal summary</label>
             <textarea className={field} rows={4} maxLength={500} value={proposal} onChange={(e) => setProposal(e.target.value)} />
           </div>
+          <div>
+            <label className={lbl}>Supporting documents (optional)</label>
+            <input type="file" multiple className="block w-full text-sm text-ink-300" onChange={onFiles} />
+            {docs.map((d) => (
+              <p key={d.hash} className="mt-1 break-all text-xs text-ink-300">{d.name} · {Math.round(d.size / 1024)} KB · {d.hash.slice(0, 14)}…</p>
+            ))}
+            <p className="mt-1 text-xs text-ink-300">Files never leave your device. Only their hashes are bound into your commitment.</p>
+          </div>
           <p className="text-xs text-ink-300">
             Only a hash of your price and proposal is recorded now. The text stays on this device. Send your documents to the organizer off-chain so they can review them; the hash lets them check that what you send matches your bid. A commit-reveal bid is hidden until the reveal phase, but it is not encrypted afterwards.
           </p>
@@ -219,6 +253,9 @@ export default function Bid() {
         <div className="card mt-4">
           <h3 className="font-semibold">Your bid receipt</h3>
           <p className="mt-2 break-all text-xs text-ink-300">Proposal hash: {saved.proposalHash}</p>
+          {saved.pkg && (
+            <button className="btn-primary mt-3 w-full" onClick={downloadPackage}>Download bid package (send it to the organizer)</button>
+          )}
           <button className="btn-ghost mt-3 w-full" onClick={copyBackup}>Copy backup (keep private)</button>
           <p className="mt-2 text-xs text-ink-300">If this browser’s data is cleared, you can no longer reveal your bid. Keep the backup safe.</p>
         </div>

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { keccak256, toHex } from "viem";
+import type { ChangeEvent } from "react";
+import { hashFile, hashPackage } from "../lib/pkg";
+import type { DocEntry } from "../lib/pkg";
 import PageShell from "../components/PageShell";
 import { loadTender, previewScore } from "../lib/load";
 import type { Bid } from "../lib/load";
@@ -30,12 +32,31 @@ function BidEval({ id, bid, budget, onDone }: { id: string; bid: Bid; budget: bi
   const [del, setDel] = useState(0);
   const [docs, setDocs] = useState(false);
   const [pasted, setPasted] = useState("");
+  const [docHashes, setDocHashes] = useState<DocEntry[]>([]);
   const [preview, setPreview] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
   const eligible = docs && bid.price > 0n && bid.price <= budget;
-  const hashOk = pasted.trim().length > 0 && keccak256(toHex(pasted.trim())) === bid.proposalHash;
+  const hashOk = pasted.trim().length > 0 && hashPackage(pasted.trim()) === bid.proposalHash;
+  let listed: DocEntry[] = [];
+  try {
+    const j = JSON.parse(pasted.trim());
+    if (Array.isArray(j.files)) listed = j.files;
+  } catch {
+    /* plain text proposal */
+  }
+  async function onDocs(e: ChangeEvent<HTMLInputElement>) {
+    const out: DocEntry[] = [];
+    for (const f of Array.from(e.target.files ?? []).slice(0, 10)) {
+      if (f.size <= 25 * 1024 * 1024) out.push(await hashFile(f));
+    }
+    setDocHashes(out);
+  }
+  async function onPkgFile(e: ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (f && f.size < 200000) setPasted(await f.text());
+  }
   const set = (f: (n: number) => void) => (n: number) => { f(n); setPreview(null); };
 
   async function onPreview() {
@@ -64,12 +85,28 @@ function BidEval({ id, bid, budget, onDone }: { id: string; bid: Bid; budget: bi
       <div className="font-mono text-sm">{short(bid.bidder)}</div>
       <p className="mt-1 text-sm text-ink-300">Revealed price: <span className="text-ink-100">{bid.price.toString()}</span></p>
       <p className="mt-1 break-all text-xs text-ink-300">Proposal hash: {bid.proposalHash}</p>
-      <label className="mt-3 block text-xs text-ink-300">Paste the proposal text the supplier sent you (optional check)</label>
+      <label className="mt-3 block text-xs text-ink-300">Paste the bid package (or proposal text) the supplier sent you (optional check)</label>
       <textarea className={field} rows={2} value={pasted} onChange={(e) => setPasted(e.target.value)} />
       {pasted.trim().length > 0 && (
         <p className={"mt-1 text-xs " + (hashOk ? "text-trust-400" : "text-red-300")}>
           {hashOk ? "MATCH: this text is exactly what the bid committed to." : "NO MATCH: this text differs from the committed proposal."}
         </p>
+      )}
+      <label className="mt-2 block text-xs text-ink-300">or load the package file</label>
+      <input type="file" accept=".json,application/json" className="block w-full text-sm text-ink-300" onChange={onPkgFile} />
+      {listed.length > 0 && hashOk && (
+        <div className="mt-3">
+          <label className="block text-xs text-ink-300">Select the documents the supplier sent you ({listed.length} listed in the package)</label>
+          <input type="file" multiple className="block w-full text-sm text-ink-300" onChange={onDocs} />
+          {listed.map((f) => (
+            <p key={f.hash} className={"mt-1 break-all text-xs " + (docHashes.some((d) => d.hash === f.hash) ? "text-trust-400" : "text-ink-300")}>
+              {docHashes.some((d) => d.hash === f.hash) ? "VERIFIED " : "waiting "}{f.name}
+            </p>
+          ))}
+          {docHashes.filter((d) => !listed.some((f) => f.hash === d.hash)).map((d) => (
+            <p key={d.hash} className="mt-1 break-all text-xs text-red-300">NOT IN PACKAGE {d.name}</p>
+          ))}
+        </div>
       )}
       <div className="mt-3 grid grid-cols-3 gap-2">
         <Pick label="Technical" value={tech} onChange={set(setTech)} />
