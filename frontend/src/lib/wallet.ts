@@ -57,7 +57,16 @@ export async function writeTender(functionName: string, args: any[]): Promise<{ 
     functionName,
     args,
   } as any);
-  const hash = await wallet.writeContract(sim.request);
+  let fees: any = {};
+  try {
+    const f = await publicClient.estimateFeesPerGas();
+    if (f.maxFeePerGas && f.maxPriorityFeePerGas) {
+      fees = { maxFeePerGas: (f.maxFeePerGas * 13n) / 10n, maxPriorityFeePerGas: f.maxPriorityFeePerGas };
+    }
+  } catch {
+    /* let the wallet choose the fee */
+  }
+  const hash = await wallet.writeContract({ ...sim.request, ...fees });
   const receipt: any = await publicClient.waitForTransactionReceipt({ hash });
   if (receipt.status !== "success") throw new Error("Transaction failed: " + hash);
   return { hash, receipt };
