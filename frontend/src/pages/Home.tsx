@@ -86,6 +86,7 @@ export default function Home() {
         <p className="mt-3 break-all text-xs text-ink-300">
           Processor {short(deployment.processor)} · circuit #{deployment.circuitId} · TenderTrust contract {short(TENDER_TRUST)}
         </p>
+        <Link to="/circuit" className="mt-3 mr-4 inline-block text-sm text-trust-400 underline">Inspect the circuit yourself</Link>
         <Link to="/security" className="mt-3 inline-block text-sm text-trust-400 underline">Trust and limits: what the chain proves, and what it does not</Link>
       </section>
 
