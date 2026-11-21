@@ -59,6 +59,7 @@ export default function Bid() {
   const [price, setPrice] = useState("");
   const [proposal, setProposal] = useState("");
   const [docs, setDocs] = useState<DocEntry[]>([]);
+  const [docBusy, setDocBusy] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [tx, setTx] = useState("");
@@ -93,9 +94,16 @@ export default function Bid() {
     const out: DocEntry[] = [];
     for (const f of Array.from(e.target.files ?? []).slice(0, 10)) {
       if (f.size > 25 * 1024 * 1024) { setErr(f.name + " is larger than 25 MB."); continue; }
-      out.push(await hashFile(f));
+      setDocBusy(true);
+      try {
+        out.push(await hashFile(f));
+      } catch {
+        setErr("Could not read " + f.name + ". Pick the file from Downloads or Images instead.");
+      }
     }
     setDocs(out);
+    setDocBusy(false);
+    e.target.value = "";
   }
 
   async function onCommit() {
@@ -212,7 +220,12 @@ export default function Bid() {
           </div>
           <div>
             <label className={lbl}>Supporting documents (optional)</label>
-            <input type="file" multiple className="block w-full text-sm text-ink-300" onChange={onFiles} />
+            <label className="btn-ghost w-full cursor-pointer">
+              Choose files
+              <input type="file" multiple accept="image/*,application/pdf,text/plain" className="hidden" onChange={onFiles} />
+            </label>
+            {docBusy && <p className="mt-1 text-xs text-ink-300">Reading files…</p>}
+            {docs.length > 0 && <p className="mt-1 text-xs text-trust-400">{docs.length} file(s) ready</p>}
             {docs.map((d) => (
               <p key={d.hash} className="mt-1 break-all text-xs text-ink-300">{d.name} · {Math.round(d.size / 1024)} KB · {d.hash.slice(0, 14)}…</p>
             ))}

@@ -49,13 +49,27 @@ function BidEval({ id, bid, budget, onDone }: { id: string; bid: Bid; budget: bi
   async function onDocs(e: ChangeEvent<HTMLInputElement>) {
     const out: DocEntry[] = [];
     for (const f of Array.from(e.target.files ?? []).slice(0, 10)) {
-      if (f.size <= 25 * 1024 * 1024) out.push(await hashFile(f));
+      if (f.size <= 25 * 1024 * 1024) {
+        try {
+          out.push(await hashFile(f));
+        } catch {
+          /* skip an unreadable file */
+        }
+      }
     }
     setDocHashes(out);
+    e.target.value = "";
   }
   async function onPkgFile(e: ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
-    if (f && f.size < 200000) setPasted(await f.text());
+    if (f && f.size < 200000) {
+      try {
+        setPasted(await f.text());
+      } catch {
+        setPasted("");
+      }
+    }
+    e.target.value = "";
   }
   const set = (f: (n: number) => void) => (n: number) => { f(n); setPreview(null); };
 
@@ -93,11 +107,17 @@ function BidEval({ id, bid, budget, onDone }: { id: string; bid: Bid; budget: bi
         </p>
       )}
       <label className="mt-2 block text-xs text-ink-300">or load the package file</label>
-      <input type="file" accept=".json,application/json" className="block w-full text-sm text-ink-300" onChange={onPkgFile} />
+      <label className="btn-ghost mt-1 w-full cursor-pointer">
+        Choose package file
+        <input type="file" className="hidden" onChange={onPkgFile} />
+      </label>
       {listed.length > 0 && hashOk && (
         <div className="mt-3">
           <label className="block text-xs text-ink-300">Select the documents the supplier sent you ({listed.length} listed in the package)</label>
-          <input type="file" multiple className="block w-full text-sm text-ink-300" onChange={onDocs} />
+          <label className="btn-ghost mt-1 w-full cursor-pointer">
+            Choose documents
+            <input type="file" multiple className="hidden" onChange={onDocs} />
+          </label>
           {listed.map((f) => (
             <p key={f.hash} className={"mt-1 break-all text-xs " + (docHashes.some((d) => d.hash === f.hash) ? "text-trust-400" : "text-ink-300")}>
               {docHashes.some((d) => d.hash === f.hash) ? "VERIFIED " : "waiting "}{f.name}
