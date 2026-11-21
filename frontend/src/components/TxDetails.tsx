@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { decodeFunctionData } from "viem";
 import { publicClient, tenderTrustAbi } from "../lib/chain";
+import { tenderTrustAbi as abi3 } from "../lib/TenderTrustV3.abi";
 import { explorerTx, short } from "../lib/format";
 
 type Info = { method: string; from: string; to: string; block: string; time: string; status: string; gas: string };
@@ -22,7 +23,11 @@ export default function TxDetails({ label, hash }: { label: string; hash: string
       const blk: any = await publicClient.getBlock({ blockNumber: rc.blockNumber });
       let method = "contract call";
       try {
-        method = decodeFunctionData({ abi: tenderTrustAbi, data: tx.input }).functionName;
+        try {
+          method = decodeFunctionData({ abi: tenderTrustAbi, data: tx.input }).functionName;
+        } catch {
+          method = decodeFunctionData({ abi: abi3, data: tx.input }).functionName;
+        }
       } catch {
         /* not a TenderTrust function */
       }
