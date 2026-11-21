@@ -36,5 +36,18 @@ export const evidenceByTender = {
       "evaluate 0x0e09…6f85": "0x2a9ed6a9bb3344d6cd125e6e76e0b1416c69ccad985ed62c33e1252056db1c19",
       "finalize": "0x8af0950002ee375a69374b81083081b299ad141c46182892a3f94c39d605495b"
     }
+  },
+  "6": {
+    "note": "Created and run through the website by separate wallets: one organizer and two bidders.",
+    "txs": {
+      "createTender": "0xabac8d5da3235964fa8ccc00a018bc7bb8610bd11a0b9b864349f2a7b5c0e0ba",
+      "commit 0xfab7…94d7": "0x3d77b5405d998a242130c2f421462f3cc8966128823def2c9cdf54402e5cb598",
+      "commit 0x0e09…6f85": "0x241ab21f217b6eb66fb59fb42284fdf494ca487f11c38d8754d628efed8fbb81",
+      "reveal 0xfab7…94d7": "0x4cfa63d765acd9e5db74d3e2026a53c914766a1a3ac92dee55c022ffa19448ea",
+      "reveal 0x0e09…6f85": "0x8061daa9e1ef3ef8b50ad13a93e94af40dcaa6c890b45753d229db72dbc8da68",
+      "evaluate 0xfab7…94d7": "0x331f36a2ca9ae07aa2f474bd0421a8c56c46147a099ab9055eb53dd3ae8f8650",
+      "evaluate 0x0e09…6f85": "0xbd8040c12cf92f17556712b178f86534d975a07bb6cc65baaa170e22cb76186c",
+      "finalize": "0x236f080cccf0c3938920d11d9d51caad7b1936bcd2d96cd006bb5b1ae21ba052"
+    }
   }
 } as const;
