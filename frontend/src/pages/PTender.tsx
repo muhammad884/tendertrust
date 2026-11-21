@@ -44,6 +44,7 @@ export default function PTender() {
       </div>
       {data.status === 0 && <Link to={"/p/tender/" + id + "/bid"} className="btn-primary mt-4 w-full">Submit a bid</Link>}
       {data.status === 1 && <Link to={"/p/tender/" + id + "/bid"} className="btn-primary mt-4 w-full">Reveal your bid</Link>}
+      {data.status === 2 && <Link to={"/p/tender/" + id + "/evaluate"} className="btn-ghost mt-4 w-full">Panel: score, settle and finalize</Link>}
 
       <div className="card mt-4">
         <h3 className="font-semibold">Terms</h3>
