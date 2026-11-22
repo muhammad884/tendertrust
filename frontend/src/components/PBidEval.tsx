@@ -113,7 +113,7 @@ export default function PBidEval({ id, bid, onDone }: { id: string; bid: Bid; on
       </div>
       <label className="mt-3 flex items-center gap-2 text-sm text-ink-300">
         <input type="checkbox" checked={docs} onChange={(e) => setDocs(e.target.checked)} />
-        I reviewed the documents and they are verified
+        I reviewed the documents or samples and they are verified
       </label>
       <label className="mt-3 block text-xs text-ink-300">Your written rationale (required; its hash is recorded)</label>
       <textarea className={field} rows={2} value={why} onChange={(e) => setWhy(e.target.value)} />

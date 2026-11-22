@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
+import LangToggle from "./LangToggle";
 
 const links = [
   { to: "/tenders", label: "Explore" },
@@ -25,7 +26,10 @@ export default function Layout() {
               </NavLink>
             ))}
           </nav>
-          <span className="badge bg-ink-700 text-ink-300">X Layer Mainnet</span>
+          <div className="flex items-center gap-2">
+            <LangToggle />
+            <span className="badge bg-ink-700 text-ink-300">X Layer Mainnet</span>
+          </div>
         </div>
       </header>
 
