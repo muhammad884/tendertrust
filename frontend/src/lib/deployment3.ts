@@ -32,5 +32,24 @@ export const evidenceByTender: Record<string, { note: string; txs: Record<string
       "settleC": "0xd0e64df50d5c13d695a8d32f566e8889d354fff44198ab4af21aeff9ca02ced9",
       "finalize": "0x0a22a1fe7527cd9f5260ba7a915c7dcb17ed1fac1efac10ea23b4c4c9594b677"
     }
+  },
+  "2": {
+    "note": "Created and run through the website with separate test wallets: one organizer, three evaluators and two bidders. One evaluator gave an outlier score and the median ignored it.",
+    "txs": {
+      "createTender": "0xfe6dd0a26175a7ffa75c009f0f1980cab896941ae557527e8a5199967281469d",
+      "commit 0xfab7…94d7": "0xe0399da7bdab60c02c4fe8e1ae21a62b71276b5aae6e1432622a48df090db0f3",
+      "commit 0x0e09…6f85": "0xe2f032def9d40fe49fccb87808d9773fd321c3b4402c0094749aab7ed9474f5e",
+      "reveal 0xfab7…94d7": "0x614dd05d46a3b7f4526266220d3df24322c198ef25cccee7a9aed82e8841f732",
+      "reveal 0x0e09…6f85": "0xfd7fa93df8b0a4c63aedbf9aec3b93b5b8c0cf5ea6de45acd2046f2158a42ed4",
+      "score 0x60a7…e25a on 0xfab7…94d7": "0x0805a37ae7dd318aa9197afdc783b416b4c4910e58dcb15cab90fb6f015da1c7",
+      "score 0x60a7…e25a on 0x0e09…6f85": "0x8b9996011be9b8288dede24abc9e184f30a07d171fea4d5000124cdf37d7d0c5",
+      "score 0xdf93…154f on 0xfab7…94d7": "0xa35f4d636f1a2db17469ab535572ef9d90e3a78df8d39c4f5d5b075eb13eff0c",
+      "score 0xdf93…154f on 0x0e09…6f85": "0xa3cf14972e4108958f28fac26efbc3dd868548539cbfe1c9e4b7b8e91aec8503",
+      "score 0x133b…ce96 on 0xfab7…94d7": "0xe3d60b5428a8d2221c20868d5f94d2283b654a621dd9c1647de251e58e74707c",
+      "score 0x133b…ce96 on 0x0e09…6f85": "0x60cf3c045e836b4644970d2ff400ea3bd2f79078f03f6cd3ac73ac562030eb41",
+      "settle 0xfab7…94d7": "0x40062ec984e9b575413bf86a161a33ddfea5679c47cadbcd8143836c727d0aab",
+      "settle 0x0e09…6f85": "0xf1e4826b9add0e7b39eb743248fa8a34da748ba94be5920dc92b36057b883b24",
+      "finalize": "0x4dcb7d8e48debd3178dd1a1e72325d1866f99a887e0342eee6836f3d00a2da5c"
+    }
   }
 };
