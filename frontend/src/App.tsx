@@ -6,6 +6,7 @@ import Create3 from "./pages/Create3";
 import PTender from "./pages/PTender";
 import PBid from "./pages/PBid";
 import PEvaluate from "./pages/PEvaluate";
+import Report from "./pages/Report";
 import PVerify from "./pages/PVerify";
 import TenderDetails from "./pages/TenderDetails";
 import Bid from "./pages/Bid";
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/tender/:id/bid" element={<Bid />} />
         <Route path="/tender/:id/evaluate" element={<Evaluate />} />
         <Route path="/security" element={<Security />} />
+        <Route path="/report/:ver/:id" element={<Report />} />
         <Route path="/circuit" element={<Circuit />} />
         <Route path="/p/tender/:id" element={<PTender />} />
         <Route path="/p/tender/:id/bid" element={<PBid />} />

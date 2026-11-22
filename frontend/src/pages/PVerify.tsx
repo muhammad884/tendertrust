@@ -141,6 +141,7 @@ export default function Verify() {
         </p>
       </div>
       <p className="mt-4 text-sm"><Link to={"/p/tender/" + id} className="text-trust-400 underline">Back to tender</Link></p>
+      <p className="mt-2 text-sm"><Link to={"/report/v3/" + id} className="text-trust-400 underline">Open the printable audit report</Link></p>
     </PageShell>
   );
 }
