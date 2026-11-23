@@ -1,19 +1,21 @@
 /** @type {import('tailwindcss').Config} */
+const v = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
         ink: {
-          900: "#0B1220",
-          800: "#111A2E",
-          700: "#1B2740",
-          600: "#2A3957",
-          500: "#5B6B8C",
-          300: "#A9B4CC",
-          100: "#E6EAF3",
+          900: v("ink-900"),
+          800: v("ink-800"),
+          700: v("ink-700"),
+          600: v("ink-600"),
+          500: v("ink-500"),
+          300: v("ink-300"),
+          100: v("ink-100"),
         },
-        trust: { 600: "#0E9F8E", 500: "#14B8A6", 400: "#2DD4BF" },
+        trust: { 600: v("trust-600"), 500: v("trust-500"), 400: v("trust-400") },
       },
     },
   },

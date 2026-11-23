@@ -29,3 +29,35 @@
   body { background: #fff !important; }
   main { padding: 0 !important; max-width: 100% !important; }
 }
+
+:root {
+  color-scheme: dark;
+  --ink-900: 11 18 32;
+  --ink-800: 17 26 46;
+  --ink-700: 27 39 64;
+  --ink-600: 42 57 87;
+  --ink-500: 91 107 140;
+  --ink-300: 169 180 204;
+  --ink-100: 230 234 243;
+  --trust-600: 14 159 142;
+  --trust-500: 20 184 166;
+  --trust-400: 45 212 191;
+}
+
+/* Eye-care light theme: warm paper tones, no pure white, no pure black */
+[data-theme="light"] {
+  color-scheme: light;
+  --ink-900: 243 238 223;
+  --ink-800: 250 246 236;
+  --ink-700: 226 218 202;
+  --ink-600: 207 197 177;
+  --ink-500: 110 103 87;
+  --ink-300: 84 78 65;
+  --ink-100: 42 38 32;
+  --trust-600: 15 118 110;
+  --trust-500: 15 118 110;
+  --trust-400: 11 94 87;
+}
+[data-theme="light"] .text-red-300 { color: #b91c1c; }
+[data-theme="light"] .text-amber-300 { color: #92400e; }
+[data-theme="light"] .text-sky-300 { color: #075985; }
