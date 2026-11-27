@@ -137,7 +137,7 @@ export default function Verify() {
           <li>Compare the result with 4×T + 3×E + 2×D + P and with the recorded total.</li>
         </ol>
         <p className="mt-3 text-xs text-ink-300">
-          The circuit proves the scoring formula ran on the given inputs. It cannot prove that documents or claims are true; the organizer reviews evidence off-chain.
+          The circuit proves the scoring formula ran on the given inputs. It cannot prove that documents or claims are true; the evaluators review evidence off-chain.
         </p>
       </div>
       <p className="mt-4 text-sm"><Link to={"/p/tender/" + id} className="text-trust-400 underline">Back to tender</Link></p>

@@ -1,0 +1,17 @@
+{
+  "tenderId": 3,
+  "graceAt": "1795810496",
+  "txs": {
+    "createTender": "0x8a658389fe83559a1e20369baf1948cf29208a73584ce6e6bc16daa98bf697d1",
+    "commitA": "0x5eaa6f21243703b9d357d720951cd24bb2a74f928ad7b6d253c4b4326f01f33c",
+    "commitB": "0xe7484a40a2077c0b9cb4007bab646eaf1dd70db267cfe8eb4b38f9dbaadc9029",
+    "revealA": "0xbd8078b6e21a027894354cb3acb5ce07a3600544026e23a252c207820f6b08c2",
+    "revealB": "0x9493e71035ad993713126daee4eef204b78c589c01ff37001dc9cd8f8d739b23",
+    "scoreA_E1": "0x0e50d59e82686a3b0d0e14c477239e198e6b75700c50684004a1fa533b8cb440",
+    "scoreA_E2": "0xe5bf259ebed3d3347ba3c964f76507e6fe07b9c07518f6e32348e46a815c9362",
+    "scoreB_E1": "0x31190d4df1163cd12c621cd28376d9e77641453252c04a3ab19412e84e9acfe4",
+    "settleA": "0xf5ee06704cf0ad1cec489f19b1dba8ac24669a076e2ada3419744993aa2e972d"
+  },
+  "passed": 4,
+  "failed": 0
+}
